@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Homework #33</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        tr:not(:first-child) td {
+            border-top: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="Q1">
+        <h4>1.讓使用者可以輸入自己的體重及身高，根據算出來的BMI值顯示下列訊息</h4>
+
+        <label for="height">身高 (m):</label>
+        <input type="number" id="height" name="height" step="0.01">
+        <br>
+        <label for="weight">體重 (kg):</label>
+        <input type="number" id="weight" name="weight" step="0.1">
+        <br>
+        <button onclick="calculateBMI()">計算BMI</button>
+
+        <p id="message"></p>
+
+    </div>
+    <hr>
+    <div class="Q2">
+        <h4>2.用^畫出以下圖形</h4>
+        <button id="draw-tree-button">畫出聖誕樹</button>
+        <pre id="fulltree"></pre>
+    </div>
+    <hr>
+    <div class="Q3">
+        <h4>3.猜數字遊戲</h4>
+        <button onclick="startGame()">開始遊戲</button>
+        <div id="inputArea" style="display: none;">
+            <label for="guess">請輸入猜測的數字(1~100)，輸入0離開遊戲: </label>
+            <input type="number" id="guess" min="0" max="100">
+            <button onclick="submitGuess()">提交</button>
+        </div>
+        <div id="gameArea"></div>
+    </div>
+    <hr>
+    <div class="Q4">
+        <h4>4. 輸入西元年，判斷是否是閏年</h4>
+        <input type="number" id="yearInput" placeholder="請輸入西元年份" />
+        <button id="checkButton">確認</button>
+        <p id="checkResult"></p>
+    </div>
+    </div>
+    <hr>
+    <div class="Q5">
+        <h4>5.請畫出九九乘法表</h4>
+        <table>
+            <tbody id="multiplication-table"></tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="Q6">
+        <h4>6.以上的作業請改用 function 來完成</h4>
+    </div>
+    <div class="Q7">
+        <h4>7.請設計一個 function，傳入攝氏溫度可以轉成華氏溫度，傳入華氏溫度可以轉成攝氏溫度</h4>
+        <input id="temperature" type="number" placeholder="請輸入溫度">
+        <select id="scale">
+            <option value="C">華氏轉攝氏</option>
+            <option value="F">攝氏轉華氏</option>
+        </select>
+        <button onclick="displayResult()">轉換</button>
+        <p id="result"></p>
+
+    </div>
+    <hr>
+    <div class="Q8">
+        <h4>8.Lab05/03.checkPassword.html 的密碼檢查(使用Regex)</h4>
+        <p>密碼驗證條件:8位數以上,至少包含一個大寫字母、小寫字母、數字、符號</p>
+        <div>
+            <label for="password-input">請輸入密碼：</label>
+            <input type="password" id="password-input" oninput="validatePassword()">
+            <button id="toggle-password-visibility" onclick="togglePasswordVisibility()">顯示輸入</button>
+        </div>
+    </div>
+    <div id="validation-result"></div>
+
+    </div>
+    <hr>
+    <div class="Q9">
+        <h4>9.使用string物件檢查電子郵件中要有 @ . 以及 @ 不能重複(使用Regex)</h4>
+        <label for="email">Email:</label>
+        <input type="text" id="email" oninput="validateEmail()">
+        <p id="error-message""></p>
+        
+        </script>
+    </div>
+    <hr>
+    <div class=" 10">
+        <h4>10.讓使用者輸入生日計算幾歲了</h4>
+        <label for="birthdate">請輸入您的出生年月日:</label>
+        <input type="date" id="birthdate">
+        <button onclick="calculateAge()">計算年齡</button>
+        <p id="output"></p>
+    </div>
+    <hr>
+
+    <script>
+        ////////////////////////////////////////////////////////////////////////////////// Q1
+
+        //計算BMI
+        function calculateBMI() {
+            let height = document.getElementById("height").value;
+            let weight = document.getElementById("weight").value;
+            let BMI = weight / (height ** 2);
+
+            //得到BMI後在網頁上顯示message
+            if (BMI < 18.5) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為過輕.`;
+            } else if (BMI >= 18.5 && BMI < 24) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為正常.`;
+            } else if (BMI >= 24 && BMI < 27) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為過重.`;
+            } else if (BMI >= 27 && BMI < 30) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為輕度肥胖.`;
+            } else if (BMI >= 30 && BMI < 35) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為中度肥胖.`;
+            } else if (BMI >= 35) {
+                document.getElementById("message").textContent = `你的BMI${BMI.toFixed(1)}為重度肥胖.`;
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////// Q2
+
+
+        function printChristmasTree(layers) {
+            let tree = '';
+            for (let i = 0; i < layers; i++) {
+                let spaces = ' '.repeat(layers - i - 1);
+                let branches = '^'.repeat(2 * i + 1);
+                tree += spaces + branches + spaces + '\n';
+            }
+
+            // 在第9層及第10層加上中間樹幹寬度為1的樹幹
+            for (let i = 0; i < 2; i++) {
+                let spaces = ' '.repeat(layers - 1);
+                tree += spaces + '^' + spaces + '\n';
+            }
+
+            document.getElementById('fulltree').textContent = tree;
+        }
+
+        //按下按鈕執行printChristmassTree function
+        document.getElementById('draw-tree-button').addEventListener('click', () => {
+            printChristmasTree(8);
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////// Q3
+
+        //取得隨機數字
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function startGame() {
+            const gameArea = document.getElementById('gameArea');
+            const inputArea = document.getElementById('inputArea');
+            gameArea.innerHTML = '';
+            inputArea.style.display = 'block';
+
+            const secretNumber = generateRandomNumber(1, 100);
+            window.secretNumber = secretNumber; // Store secretNumber globally
+            window.attempts = []; // Store attempts globally
+        }
+
+        function submitGuess() {
+            const gameArea = document.getElementById('gameArea');
+            const guessInput = document.getElementById('guess');
+            const guess = parseInt(guessInput.value);
+
+            if (isNaN(guess)) {
+                alert('請輸入有效的數字');
+                return;
+            }
+
+            if (guess === 0) {
+                gameArea.innerHTML += '<p>遊戲結束，祕密數字是 ' + window.secretNumber + '</p>';
+                document.getElementById('inputArea').style.display = 'none';
+                return;
+            }
+
+            // 提示並留下歷程
+            window.attempts.push(guess);
+
+            if (guess > window.secretNumber) {
+                gameArea.innerHTML += '<p>數字太大! ' + guess + '</p>';
+            } else if (guess < window.secretNumber) {
+                gameArea.innerHTML += '<p>數字太小! ' + guess + '</p>';
+            } else {
+                gameArea.innerHTML += '<p>猜中數字 = ' + guess + '</p>';
+                gameArea.innerHTML += '<p>歷程: ' + window.attempts.join(', ') + '</p>';
+                document.getElementById('inputArea').style.display = 'none';
+            }
+
+            // Clear input field
+            guessInput.value = '';
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////// Q4
+
+        function isLeapYear(yearInput, checkResult) {
+            if (yearInput % 400 === 0) {
+                checkResult.textContent = yearInput + " 是閏年";
+            } else if (yearInput % 4 === 0 && yearInput % 100 !== 0) {
+                checkResult.textContent = yearInput + " 是閏年";
+            } else if (yearInput % 4 !== 0) {
+                checkResult.textContent = yearInput + " 是平年";
+            } else if (yearInput % 100 === 0 && yearInput % 400 !== 0) {
+                checkResult.textContent = yearInput + " 是平年";
+            }
+        }
+
+        const checkButton = document.getElementById("checkButton");
+        const yearInput = document.getElementById("yearInput");
+        const checkResult = document.getElementById("checkResult");
+
+        // 為按鈕添加點擊事件
+        checkButton.addEventListener("click", () => {
+            const inputYear = parseInt(yearInput.value);
+            isLeapYear(inputYear, checkResult);
+        });
+
+
+        ////////////////////////////////////////////////////////////////////////////////// Q5
+        let table = '';
+        //建立乘法表格,列印行(1-9)
+        for (let i = 1; i <= 9; i++) {
+            let row = '<tr>';
+            //控制列(2-9)
+            for (let j = 2; j <= 9; j++) {
+                let result = i * j;
+                row += `<td>${j} * ${i} = ${result}</td>`;
+            }
+            row += '</tr>';
+            table += row;
+        }
+        document.getElementById('multiplication-table').innerHTML = table;
+
+        ////////////////////////////////////////////////////////////////////////////////// Q7
+
+        //溫度轉換(用下拉式選單切換攝氏/華氏)
+        function convertTemperature(temp, scale) {
+            //若為攝氏轉華氏
+            if (scale === 'C') {
+                return (temp - 32) * 5 / 9;
+                //若為華氏轉攝氏
+            } else if (scale === 'F') {
+                return temp * 9 / 5 + 32;
+            } else {
+                throw new Error('Invalid scale');
+            }
+        }
+
+        function displayResult() {
+            const temperature = document.getElementById('temperature').value;
+            const scale = document.getElementById('scale').value;
+            const result = convertTemperature(parseFloat(temperature), scale);
+            document.getElementById('result').textContent = `轉換後的溫度為：${result.toFixed(1)}`;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////// Q8
+
+        //驗證密碼並提示錯誤訊息
+        function validatePassword() {
+            const passwordInput = document.getElementById('password-input');
+            const validationResult = document.getElementById('validation-result');
+            const password = passwordInput.value;
+
+            const lengthRegex = /.{8,}/;
+            const uppercaseRegex = /[A-Z]/;
+            const lowercaseRegex = /[a-z]/;
+            const digitRegex = /\d/;
+            const symbolRegex = /[\W_]/;
+
+            //提示錯誤
+            const conditions = [
+                { regex: lengthRegex, message: '密碼長度不足8位' },
+                { regex: uppercaseRegex, message: '缺少大寫字母' },
+                { regex: lowercaseRegex, message: '缺少小寫字母' },
+                { regex: digitRegex, message: '缺少數字' },
+                { regex: symbolRegex, message: '缺少符號' },
+            ];
+
+            //設定提示訊息為空字串
+            let validationResultText = '';
+
+            //for loop check conditions條件,並將不符合的條件添加到validationResultText
+            for (const condition of conditions) {
+                if (!condition.regex.test(password)) {
+                    validationResultText += `<p>${condition.message}</p>`;
+                }
+            }
+            // 是否為空字符串。如果為空，則表示密碼符合所有條件。
+            if (validationResultText === '') {
+                validationResultText = '<p>密碼符合要求！</p>';
+            }
+
+            validationResult.innerHTML = validationResultText;
+        }
+
+        //使輸入可見
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password-input');
+            const togglePasswordVisibilityButton = document.getElementById('toggle-password-visibility');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordVisibilityButton.textContent = '隱藏密碼';
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordVisibilityButton.textContent = '顯示密碼';
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////// Q9
+
+        function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const errorMessage = document.getElementById('error-message');
+
+            //條件:用戶帳號+@+域名
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(emailInput.value)) {
+                errorMessage.textContent = 'email無效請重新輸入。';
+            } else {
+                errorMessage.textContent = '';
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////// Q10
+
+        function calculateAge() {
+            const birthdateInput = document.getElementById('birthdate');
+            const birthdate = new Date(birthdateInput.value);
+            const currentDate = new Date();
+
+            const ageInMilliseconds = currentDate - birthdate;
+            const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
+            const ageInYears = Math.floor(ageInDays / 365);
+            const remainingDays = ageInDays % 365;
+
+            const output = document.getElementById('output');
+
+            if (birthdateInput.value) {
+                output.textContent = `您現在 ${ageInYears} 歲 ${remainingDays} 天了。`;
+            } else {
+                output.textContent = '請輸入有效的出生年月日。';
+            }
+        }
+
+
+    </script>
+
+</body>
+
+</html>
